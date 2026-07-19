@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.campuslostandfound.screens.splash.SplashScreen
 import com.example.campuslostandfound.screens.login.LoginScreen
 import com.example.campuslostandfound.screens.register.RegisterScreen
+import com.example.campuslostandfound.screens.home.HomeScreen
 @Composable
 fun AppNavigation() {
 
@@ -25,6 +26,9 @@ fun AppNavigation() {
         }
         composable(Routes.REGISTER) {
             RegisterScreen(navController)
+        }
+        composable(Routes.HOME) {
+            HomeScreen()
         }
 
     }
