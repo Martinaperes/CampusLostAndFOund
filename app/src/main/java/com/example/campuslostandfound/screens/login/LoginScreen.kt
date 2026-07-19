@@ -30,9 +30,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.campuslostandfound.navigation.Routes
-
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import com.example.campuslostandfound.firebase.AuthRepository
 @Composable
 fun LoginScreen(navController:NavController){
+    val context = LocalContext.current
     var email by remember{
         mutableStateOf("")
     }
@@ -41,6 +44,9 @@ fun LoginScreen(navController:NavController){
     }
     var passwordVisible by remember {
         mutableStateOf(false)
+    }
+    val authRepository=remember {
+        AuthRepository()
     }
     Column(
         modifier = Modifier
@@ -93,7 +99,42 @@ fun LoginScreen(navController:NavController){
         Spacer(modifier=Modifier.height(24.dp))
         Button(
             onClick = {
-                //Login code will go here
+                if(email.isBlank()){
+                    Toast.makeText(
+                        context,
+                        "Enter your email",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@Button
+                }
+                if(password.isBlank()){
+                    Toast.makeText(
+                        context,
+                        "Enter your password",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@Button
+                }
+                authRepository.loginUser(
+                    email=email,
+                    password=password,
+                    onSuccess = {
+                        Toast.makeText(
+                            context,"Login Successful",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navController.navigate(Routes.HOME)
+                    },
+                    onFailure = {
+                        error->
+                        Toast.makeText(
+                            context,
+                            error,
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                    }
+                )
             },
             modifier= Modifier
                 .fillMaxWidth()
