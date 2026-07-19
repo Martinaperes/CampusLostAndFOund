@@ -17,4 +17,22 @@ class AuthRepository{
                 onFailure(exception.message ?: "Registration failed")
             }
     }
+    fun loginUser(
+        email: String,
+        password: String,
+        onSuccess:()->Unit,
+        onFailure:(String)->Unit
+    )
+    {
+        auth.signInWithEmailAndPassword(
+            email,password)
+                .addOnCompleteListener{task->
+                    if(task.isSuccessful){
+                        onSuccess()
+                    }else{
+                        onFailure(task.exception?.message?:"Login failed")
+                    }
+                }
+
+    }
 }
