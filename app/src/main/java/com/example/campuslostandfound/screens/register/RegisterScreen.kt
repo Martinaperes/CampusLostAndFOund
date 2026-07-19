@@ -180,6 +180,49 @@ fun RegisterScreen(navController:NavController){
                     ).show()
                     return@Button
                 }
+                if(password != confirmpassword){
+                    Toast.makeText(
+                        context,
+                        "Passwords do not match",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@Button
+                }
+                if(password.length<8){
+                    Toast.makeText(
+                        context,
+                        "Password must be atleast 8 characters",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@Button
+                }
+                if(!password.any{!it.isLetterOrDigit()}){
+                    Toast.makeText(
+                        context,
+                        "Password must contain atleast one special character",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@Button
+                }
+                authRepository.registerUser(
+                    email=email,
+                    password=password,
+                    onSuccess = {
+                        Toast.makeText(
+                            context,
+                            "Registration successful",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navController.navigate(Routes.LOGIN)
+                    },
+                    onFailure = {error->
+                        Toast.makeText(
+                            context,
+                            error,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                )
             },
             modifier= Modifier
                 .fillMaxWidth()
