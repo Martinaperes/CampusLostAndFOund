@@ -15,37 +15,13 @@ data class RecentItem(
     val date: String
 )
 @Composable
-fun RecentItemsSection(){
-    val recentItems=listOf(
-        RecentItem("HP Laptop", "Main Library", "Yesterday"),
-        RecentItem("Student ID", "Engineering Block", "Today"),
-        RecentItem("Backpack", "Cafeteria", "2 days ago")
-    )
-    Column(
-        modifier = Modifier.padding(top=24.dp)
-    ) {
-        Text(
-            text="Recent Items",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
+fun RecentItemsSection() {
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp )
-        ) {
-            items(recentItems){
-                item->
-                RecentItemCard(
-                    itemName=item.itemName,
-                    location = item.location,
-                    date = item.date,
-                    onClick={
-                        //details screen later
-                    }
-                )
-            }
-        }
-    }
+    Text(
+        text = "Recent Items",
+        style = MaterialTheme.typography.titleLarge,
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
+
+    Spacer(modifier = Modifier.height(16.dp))
 }
