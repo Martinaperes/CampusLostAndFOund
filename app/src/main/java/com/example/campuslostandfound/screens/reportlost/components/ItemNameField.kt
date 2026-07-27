@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun ItemNameField(
     itemName: String,
-    onItemNameChange:(String)->unit
+    onItemNameChange:(String)-> Unit
 ){
     OutlinedTextField(
         value = itemName,
