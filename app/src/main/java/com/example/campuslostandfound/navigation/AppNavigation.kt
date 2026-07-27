@@ -11,9 +11,11 @@ import com.example.campuslostandfound.screens.login.LoginScreen
 import com.example.campuslostandfound.screens.register.RegisterScreen
 import com.example.campuslostandfound.screens.home.HomeScreen
 import com.example.campuslostandfound.screens.home.components.BottomNavigationBar
+import com.example.campuslostandfound.screens.reportlost.ReportLostScreen
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.padding
+
 @Composable
 fun AppNavigation() {
 
@@ -48,6 +50,9 @@ fun AppNavigation() {
             }
             composable(Routes.HOME) {
                 HomeScreen(navController)
+            }
+            composable(Routes.REPORT_LOST) {
+                ReportLostScreen()
             }
 
         }
