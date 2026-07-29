@@ -85,7 +85,10 @@ fun DashboardSection(
         ){
             Card(
                 modifier = Modifier.weight(1f),
-                shape=RoundedCornerShape(16.dp)
+                shape=RoundedCornerShape(16.dp),
+                onClick={
+                    navController.navigate(Routes.FOUND_ITEMS)
+                }
             ){
                 Column(modifier = Modifier.padding(20.dp)){
                     Icon(
@@ -95,7 +98,11 @@ fun DashboardSection(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text="Items Found"
+                        text="Browse",
+                        style= MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text="Found Items"
                     )
                 }
             }
