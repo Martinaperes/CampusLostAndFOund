@@ -116,7 +116,9 @@ fun ReportFoundScreen(){
                 description = description,
                 onDescriptionChange = {
                     description = it
-                }
+                },
+                label="Description",
+                placeholder = "Describe the found item..."
             )
         }
         item {
@@ -163,6 +165,7 @@ fun ReportFoundScreen(){
         }
         item {
             SubmitButton(
+                text="Submit Report",
                 onClick = {
                     //Add validation and firebase later
                 }
