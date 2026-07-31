@@ -8,12 +8,13 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun SubmitButton(
-    onClick:()->Unit
-){
+    text: String,
+    onClick: () -> Unit
+) {
     Button(
-        onClick=onClick,
+        onClick = onClick,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text("Submit Report")
+        Text(text)
     }
 }
