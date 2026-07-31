@@ -20,10 +20,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.campuslostandfound.screens.founditems.components.FoundItemCard
 import com.example.campuslostandfound.ui.theme.PrimaryGreen
+import androidx.navigation.NavController
+import com.example.campuslostandfound.navigation.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FoundItemsScreen() {
+fun FoundItemsScreen(
+    navController: NavController
+) {
 
     var searchQuery by remember {
         mutableStateOf("")
@@ -183,7 +187,7 @@ fun FoundItemsScreen() {
                         location = item.location,
                         date = item.date,
                         onClick = {
-                            // Navigate to Item Details later
+                            navController.navigate(Routes.ITEM_DETAILS)
                         }
                     )
 
