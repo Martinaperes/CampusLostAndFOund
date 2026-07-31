@@ -104,13 +104,16 @@ fun ReportLostScreen() {
                 description = description,
                 onDescriptionChange = {
                     description = it
-                }
+                },
+                label = "Description",
+                placeholder = "Describe the lost item..."
             )
         }
         item{
             Spacer(modifier = Modifier.height(16.dp))}
         item {
             SubmitButton(
+                text="Submit Report",
                 onClick = {
                     //Add validation and firebase later
                 }
