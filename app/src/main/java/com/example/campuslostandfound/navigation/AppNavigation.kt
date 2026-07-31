@@ -16,6 +16,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.padding
 import com.example.campuslostandfound.screens.founditems.FoundItemsScreen
+import com.example.campuslostandfound.screens.itemdetails.ItemDetailsScreen
 
 @Composable
 fun AppNavigation() {
@@ -59,7 +60,10 @@ fun AppNavigation() {
                 ReportLostScreen()
             }
             composable (Routes.FOUND_ITEMS){
-                 FoundItemsScreen()
+                 FoundItemsScreen(navController)
+            }
+            composable(Routes.ITEM_DETAILS) {
+                ItemDetailsScreen()
             }
         }
     }
