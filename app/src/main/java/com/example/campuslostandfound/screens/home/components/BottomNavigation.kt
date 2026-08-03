@@ -12,6 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.example.campuslostandfound.navigation.BottomNavItem
 import com.example.campuslostandfound.navigation.Routes
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.material3.NavigationBarItem
 
 @Composable
 fun BottomNavigationBar(
@@ -35,13 +38,21 @@ fun BottomNavigationBar(
         )
 
     )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
     NavigationBar() {
         items.forEach {
             item->
             NavigationBarItem(
-                selected=false,
+                selected = currentRoute == item.route,
                 onClick = {
-                    navController.navigate(item.route)
+                    navController.navigate(item.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                    }
                 },
                 icon={
                     Icon(
