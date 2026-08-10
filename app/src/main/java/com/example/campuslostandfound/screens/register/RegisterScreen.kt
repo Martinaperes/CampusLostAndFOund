@@ -33,10 +33,32 @@ import com.example.campuslostandfound.firebase.AuthRepository
 import com.example.campuslostandfound.navigation.Routes
 import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.campuslostandfound.data.local.DatabaseProvider
+import com.example.campuslostandfound.data.repository.UserRepository
+
 
 @Composable
-fun RegisterScreen(navController:NavController){
+fun RegisterScreen(navController: NavController) {
+
     val context = LocalContext.current
+
+    val database = DatabaseProvider.getDatabase(context)
+
+    val authRepository = remember {
+        AuthRepository()
+    }
+
+    val userRepository = remember {
+        UserRepository(database.userDao())
+    }
+
+    val registerViewModel: RegisterViewModel = viewModel(
+        factory = RegisterViewModelFactory(
+            authRepository = authRepository,
+            userRepository = userRepository
+        )
+    )
     var fullName by remember{
         mutableStateOf("")
     }
@@ -55,9 +77,19 @@ fun RegisterScreen(navController:NavController){
     var confirmPasswordVisible by remember {
         mutableStateOf(false)
     }
-    val authRepository=remember {
-        AuthRepository()
+    var registrationNumber by remember {
+        mutableStateOf("")
     }
+
+    var department by remember {
+        mutableStateOf("")
+    }
+
+    var phoneNumber by remember {
+        mutableStateOf("")
+    }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -77,6 +109,53 @@ fun RegisterScreen(navController:NavController){
                 Text("Full Name")
             },
             modifier=Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = registrationNumber,
+            onValueChange = {
+                registrationNumber = it
+            },
+            label = {
+                Text("Registration Number")
+            },
+            placeholder = {
+                Text("e.g. SCCJ/00632/2023")
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = department,
+            onValueChange = {
+                department = it
+            },
+            label = {
+                Text("Department")
+            },
+            placeholder = {
+                Text("e.g. Computing and IT")
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = phoneNumber,
+            onValueChange = {
+                phoneNumber = it
+            },
+            label = {
+                Text("Phone Number")
+            },
+            placeholder = {
+                Text("e.g. 0716052342")
+            },
+            modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier=Modifier.height(16.dp))
         OutlinedTextField(
@@ -156,6 +235,32 @@ fun RegisterScreen(navController:NavController){
                     ).show()
                     return@Button
                 }
+                if (registrationNumber.isBlank()) {
+                    Toast.makeText(
+                        context,
+                        "Please enter your registration number",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@Button
+                }
+
+                if (department.isBlank()) {
+                    Toast.makeText(
+                        context,
+                        "Please enter your department",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@Button
+                }
+
+                if (phoneNumber.isBlank()) {
+                    Toast.makeText(
+                        context,
+                        "Please enter your phone number",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@Button
+                }
                 if(email.isBlank()){
                     Toast.makeText(
                         context,
@@ -204,18 +309,29 @@ fun RegisterScreen(navController:NavController){
                     ).show()
                     return@Button
                 }
-                authRepository.registerUser(
-                    email=email,
-                    password=password,
+                registerViewModel.register(
+                    email = email,
+                    password = password,
+                    registrationNumber = registrationNumber,
+                    name = fullName,
+                    department = department,
+                    phoneNumber = phoneNumber,
+
                     onSuccess = {
                         Toast.makeText(
                             context,
                             "Registration successful",
                             Toast.LENGTH_SHORT
                         ).show()
-                        navController.navigate(Routes.LOGIN)
+
+                        navController.navigate(Routes.LOGIN) {
+                            popUpTo(Routes.REGISTER) {
+                                inclusive = true
+                            }
+                        }
                     },
-                    onFailure = {error->
+
+                    onFailure = { error ->
                         Toast.makeText(
                             context,
                             error,
