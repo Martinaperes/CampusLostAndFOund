@@ -18,6 +18,9 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE userId = :userId")
     suspend fun getUserById(userId: Int): UserEntity?
 
+    @Query("SELECT * FROM users WHERE firebaseUid = :firebaseUid LIMIT 1")
+    suspend fun getUserByFirebaseUid(firebaseUid: String): UserEntity?
+
     @Update
     suspend fun updateUser(user: UserEntity)
 
