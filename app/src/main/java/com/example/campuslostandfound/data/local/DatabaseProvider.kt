@@ -1,6 +1,5 @@
 package com.example.campuslostandfound.data.local
 
-
 import android.content.Context
 import androidx.room.Room
 
