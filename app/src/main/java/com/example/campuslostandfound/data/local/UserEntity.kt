@@ -9,6 +9,8 @@ data class UserEntity(
     @PrimaryKey(autoGenerate = true)
     val userId: Int = 0,
 
+    val firebaseUid: String,
+
     val registrationNumber: String,
 
     val name: String,
