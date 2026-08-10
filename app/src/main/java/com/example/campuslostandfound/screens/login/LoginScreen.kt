@@ -33,9 +33,30 @@ import com.example.campuslostandfound.navigation.Routes
 import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
 import com.example.campuslostandfound.firebase.AuthRepository
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.remember
+import com.example.campuslostandfound.data.local.DatabaseProvider
+import com.example.campuslostandfound.data.repository.UserRepository
 @Composable
 fun LoginScreen(navController:NavController){
     val context = LocalContext.current
+
+    val database = DatabaseProvider.getDatabase(context)
+
+    val authRepository = remember {
+        AuthRepository()
+    }
+
+    val userRepository = remember {
+        UserRepository(database.userDao())
+    }
+
+    val loginViewModel: LoginViewModel = viewModel(
+        factory = LoginViewModelFactory(
+            authRepository = authRepository,
+            userRepository = userRepository
+        )
+    )
     var email by remember{
         mutableStateOf("")
     }
@@ -45,9 +66,7 @@ fun LoginScreen(navController:NavController){
     var passwordVisible by remember {
         mutableStateOf(false)
     }
-    val authRepository=remember {
-        AuthRepository()
-    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -115,24 +134,32 @@ fun LoginScreen(navController:NavController){
                     ).show()
                     return@Button
                 }
-                authRepository.loginUser(
-                    email=email,
-                    password=password,
+                loginViewModel.login(
+                    email = email,
+                    password = password,
+
                     onSuccess = {
+
                         Toast.makeText(
-                            context,"Login Successful",
+                            context,
+                            "Login successful",
                             Toast.LENGTH_SHORT
                         ).show()
-                        navController.navigate(Routes.HOME)
+
+                        navController.navigate(Routes.HOME) {
+                            popUpTo(Routes.LOGIN) {
+                                inclusive = true
+                            }
+                        }
                     },
-                    onFailure = {
-                        error->
+
+                    onFailure = { error ->
+
                         Toast.makeText(
                             context,
                             error,
                             Toast.LENGTH_LONG
                         ).show()
-
                     }
                 )
             },
