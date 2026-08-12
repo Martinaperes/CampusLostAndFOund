@@ -5,10 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.campuslostandfound.data.repository.UserRepository
 import com.example.campuslostandfound.firebase.AuthRepository
 import kotlinx.coroutines.launch
+import com.example.campuslostandfound.data.session.SessionManager
 
 class LoginViewModel(
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     fun login(
@@ -49,7 +51,8 @@ class LoginViewModel(
 
                         } else {
 
-                            // Login successful
+                            sessionManager.saveUserId(user.userId)
+
                             onSuccess()
                         }
 
@@ -67,5 +70,9 @@ class LoginViewModel(
                 onFailure(error)
             }
         )
+    }
+    fun logout() {
+        authRepository.logout()
+        sessionManager.clearSession()
     }
 }
