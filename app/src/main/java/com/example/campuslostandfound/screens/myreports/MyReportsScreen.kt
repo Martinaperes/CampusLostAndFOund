@@ -23,9 +23,23 @@ import com.example.campuslostandfound.data.local.DatabaseProvider
 import com.example.campuslostandfound.data.local.LostFoundItemEntity
 import com.example.campuslostandfound.data.repository.LostFoundRepository
 import com.example.campuslostandfound.data.session.SessionManager
+import androidx.navigation.NavController
+import com.example.campuslostandfound.navigation.Routes
+import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.graphics.Color
+import kotlinx.coroutines.launch
 
 @Composable
-fun MyReportsScreen() {
+fun MyReportsScreen(
+    navController: NavController
+) {
 
     val context = LocalContext.current
 
@@ -137,7 +151,12 @@ fun MyReportsScreen() {
                 items(reports) { report ->
 
                     ReportCard(
-                        report = report
+                        report = report,
+                        onEdit = {
+                            navController.navigate(
+                                "${Routes.EDIT_REPORT}/${report.itemId}"
+                            )
+                        }
                     )
                 }
             }
@@ -147,7 +166,8 @@ fun MyReportsScreen() {
 
 @Composable
 private fun ReportCard(
-    report: LostFoundItemEntity
+    report: LostFoundItemEntity,
+    onEdit: ()->Unit
 ) {
 
     Card(
@@ -194,6 +214,16 @@ private fun ReportCard(
             Text(
                 text = "Description: ${report.description}"
             )
+            Spacer(
+                modifier = Modifier.height(12.dp)
+            )
+
+            Button(
+                onClick = onEdit,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("EDIT REPORT")
+            }
         }
     }
 }
