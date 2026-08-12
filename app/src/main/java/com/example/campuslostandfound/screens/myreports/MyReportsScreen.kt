@@ -33,6 +33,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.launch
 
@@ -66,7 +67,11 @@ fun MyReportsScreen(
     var isLoading by remember {
         mutableStateOf(true)
     }
+    var reportToDelete by remember {
+        mutableStateOf<LostFoundItemEntity?>(null)
+    }
 
+    val scope = rememberCoroutineScope()
     LaunchedEffect(currentUserId) {
 
         if (currentUserId != -1) {
@@ -156,19 +161,97 @@ fun MyReportsScreen(
                             navController.navigate(
                                 "${Routes.EDIT_REPORT}/${report.itemId}"
                             )
+                        },
+                        onDelete = {
+                            reportToDelete = report
                         }
                     )
                 }
             }
         }
     }
+    if (reportToDelete != null) {
+
+        AlertDialog(
+            onDismissRequest = {
+                reportToDelete = null
+            },
+
+            title = {
+                Text("Delete Report?")
+            },
+
+            text = {
+                Text(
+                    "Are you sure you want to delete " +
+                            "\"${reportToDelete!!.itemName}\"? " +
+                            "This action cannot be undone."
+                )
+            },
+
+            confirmButton = {
+
+                TextButton(
+                    onClick = {
+
+                        val report = reportToDelete
+
+                        if (report != null) {
+
+                            scope.launch {
+
+                                try {
+
+                                    repository.deleteItem(report)
+
+                                    reports = reports.filter {
+                                        it.itemId != report.itemId
+                                    }
+
+                                    reportToDelete = null
+
+                                    Toast.makeText(
+                                        context,
+                                        "Report deleted successfully!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+
+                                } catch (exception: Exception) {
+
+                                    Toast.makeText(
+                                        context,
+                                        "Delete failed: ${exception.message}",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        }
+                    }
+                ) {
+                    Text("DELETE")
+                }
+            },
+
+            dismissButton = {
+
+                TextButton(
+                    onClick = {
+                        reportToDelete = null
+                    }
+                ) {
+                    Text("CANCEL")
+                }
+            }
+        )
+    }
 }
 
 @Composable
 private fun ReportCard(
     report: LostFoundItemEntity,
-    onEdit: ()->Unit
-) {
+    onEdit: () -> Unit,
+    onDelete: () -> Unit
+){
 
     Card(
         modifier = Modifier
@@ -223,6 +306,19 @@ private fun ReportCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("EDIT REPORT")
+            }
+            Spacer(
+                modifier = Modifier.height(8.dp)
+            )
+
+            Button(
+                onClick = onDelete,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Red
+                )
+            ) {
+                Text("DELETE REPORT")
             }
         }
     }
