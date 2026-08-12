@@ -11,4 +11,5 @@ object Routes {
     const val PROFILE = "profile"
     const val FOUND_ITEMS="found_items"
     const val ITEM_DETAILS="item_details"
+    const val MY_REPORTS = "my_reports"
 }
