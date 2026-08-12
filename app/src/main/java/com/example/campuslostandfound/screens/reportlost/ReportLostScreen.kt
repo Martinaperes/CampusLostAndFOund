@@ -25,6 +25,9 @@ import androidx.compose.ui.platform.LocalContext
 import com.example.campuslostandfound.data.local.DatabaseProvider
 import com.example.campuslostandfound.data.repository.LostFoundRepository
 import com.example.campuslostandfound.data.session.SessionManager
+import com.example.campuslostandfound.data.local.LostFoundItemEntity
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun ReportLostScreen() {
@@ -47,6 +50,7 @@ fun ReportLostScreen() {
     var itemName by remember {
         mutableStateOf("")
     }
+    val coroutineScope = rememberCoroutineScope()
 
     var selectedCategory by remember {
         mutableStateOf("")
@@ -201,11 +205,106 @@ fun ReportLostScreen() {
             SubmitButton(
                 text = "Submit Report",
                 onClick = {
-                    Toast.makeText(
-                        context,
-                        "Current user ID: $currentUserId",
-                        Toast.LENGTH_SHORT
-                    ).show()
+
+                    // Basic validation
+                    if (itemName.isBlank()) {
+                        Toast.makeText(
+                            context,
+                            "Please enter the item name",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@SubmitButton
+                    }
+
+                    if (selectedCategory.isBlank()) {
+                        Toast.makeText(
+                            context,
+                            "Please select a category",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@SubmitButton
+                    }
+
+                    if (itemType.isBlank()) {
+                        Toast.makeText(
+                            context,
+                            "Please enter the item type",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@SubmitButton
+                    }
+
+                    if (location.isBlank()) {
+                        Toast.makeText(
+                            context,
+                            "Please enter the last seen location",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@SubmitButton
+                    }
+
+                    if (selectedDate.isBlank()) {
+                        Toast.makeText(
+                            context,
+                            "Please select the date lost",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@SubmitButton
+                    }
+
+                    if (description.isBlank()) {
+                        Toast.makeText(
+                            context,
+                            "Please enter a description",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@SubmitButton
+                    }
+
+                    if (currentUserId == -1) {
+                        Toast.makeText(
+                            context,
+                            "User session not found. Please login again.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        return@SubmitButton
+                    }
+
+                    // Create Room entity
+                    val item = LostFoundItemEntity(
+                        userId = currentUserId,
+                        itemName = itemName,
+                        category = selectedCategory,
+                        type = itemType,
+                        description = description,
+                        location = location,
+                        date = selectedDate,
+                        serialNumber = serialNumber.ifBlank { null },
+                        imageUri = null,
+                        status = "LOST"
+                    )
+
+                    coroutineScope.launch {
+
+                        try {
+
+                            val itemId = repository.createItem(item)
+
+                            Toast.makeText(
+                                context,
+                                "Report submitted successfully! ID: $itemId",
+                                Toast.LENGTH_LONG
+                            ).show()
+
+                        } catch (exception: Exception) {
+
+                            Toast.makeText(
+                                context,
+                                "Failed to save report: ${exception.message}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
                 }
             )
         }
