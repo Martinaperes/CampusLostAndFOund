@@ -107,28 +107,30 @@ fun DashboardSection(
                 }
             }
             Card(
-                modifier=Modifier.weight(1f),
+                modifier = Modifier.weight(1f),
                 shape = RoundedCornerShape(16.dp),
-                onClick={
-                    //We'll navigate here later
+                onClick = {
+                    navController.navigate(Routes.MY_REPORTS)
                 }
-            ){
+            ) {
                 Column(
-                    modifier=Modifier.padding(20.dp)
+                    modifier = Modifier.padding(20.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Assignment,
-                        contentDescription = "Claims Center",
-                        tint=PrimaryGreen
-
+                        contentDescription = "My Reports",
+                        tint = PrimaryGreen
                     )
+
                     Spacer(modifier = Modifier.height(12.dp))
+
                     Text(
-                        text="Claims",
+                        text = "My Reports",
                         style = MaterialTheme.typography.titleMedium
                     )
+
                     Text(
-                        text="Center"
+                        text = "View your reports"
                     )
                 }
             }
