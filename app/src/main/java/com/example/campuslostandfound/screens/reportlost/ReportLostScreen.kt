@@ -20,10 +20,30 @@ import com.example.campuslostandfound.screens.reportlost.components.DatePickerFi
 import com.example.campuslostandfound.screens.reportlost.components.DescriptionField
 import com.example.campuslostandfound.screens.reportlost.components.ImagePickerCard
 import com.example.campuslostandfound.screens.reportlost.components.SubmitButton
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import com.example.campuslostandfound.data.local.DatabaseProvider
+import com.example.campuslostandfound.data.repository.LostFoundRepository
+import com.example.campuslostandfound.data.session.SessionManager
 
 @Composable
 fun ReportLostScreen() {
+    val context = LocalContext.current
 
+    val database = remember {
+        DatabaseProvider.getDatabase(context)
+    }
+
+    val repository = remember {
+        LostFoundRepository(
+            database.lostFoundItemDao()
+        )
+    }
+
+    val sessionManager = remember {
+        SessionManager(context)
+    }
+    val currentUserId = sessionManager.getUserId()
     var itemName by remember {
         mutableStateOf("")
     }
@@ -45,6 +65,9 @@ fun ReportLostScreen() {
     }
 
     var serialNumber by remember {
+        mutableStateOf("")
+    }
+    var itemType by remember {
         mutableStateOf("")
     }
 
@@ -85,6 +108,22 @@ fun ReportLostScreen() {
                 onCategorySelected = {
                     selectedCategory = it
                 }
+            )
+        }
+        item {
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+        }
+
+        item {
+            CustomTextField(
+                value = itemType,
+                onValueChange = {
+                    itemType = it
+                },
+                label = "Item Type",
+                placeholder = "e.g. Electronics"
             )
         }
 
@@ -162,7 +201,11 @@ fun ReportLostScreen() {
             SubmitButton(
                 text = "Submit Report",
                 onClick = {
-                    // Room connection will be added next
+                    Toast.makeText(
+                        context,
+                        "Current user ID: $currentUserId",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             )
         }
