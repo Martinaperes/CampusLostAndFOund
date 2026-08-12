@@ -37,10 +37,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.remember
 import com.example.campuslostandfound.data.local.DatabaseProvider
 import com.example.campuslostandfound.data.repository.UserRepository
+import com.example.campuslostandfound.data.session.SessionManager
 @Composable
 fun LoginScreen(navController:NavController){
     val context = LocalContext.current
-
+    val sessionManager = remember {
+        SessionManager(context)
+    }
     val database = DatabaseProvider.getDatabase(context)
 
     val authRepository = remember {
@@ -54,7 +57,8 @@ fun LoginScreen(navController:NavController){
     val loginViewModel: LoginViewModel = viewModel(
         factory = LoginViewModelFactory(
             authRepository = authRepository,
-            userRepository = userRepository
+            userRepository = userRepository,
+            sessionManager = sessionManager
         )
     )
     var email by remember{
