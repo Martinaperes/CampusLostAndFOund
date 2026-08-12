@@ -17,10 +17,24 @@ import com.example.campuslostandfound.screens.home.components.RecentItemCard
 import com.example.campuslostandfound.screens.home.components.RecentItemsSection
 import com.example.campuslostandfound.screens.home.components.SearchBar
 import com.example.campuslostandfound.screens.home.components.TopBar
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import com.example.campuslostandfound.data.session.SessionManager
+import com.example.campuslostandfound.firebase.AuthRepository
+import com.example.campuslostandfound.navigation.Routes
 
 @Composable
 fun HomeScreen(navController: NavController) {
 
+    val context = LocalContext.current
+
+    val sessionManager = remember {
+        SessionManager(context)
+    }
+
+    val authRepository = remember {
+        AuthRepository()
+    }
     val recentItems = listOf(
         RecentItem(
             itemName = "HP Laptop",
@@ -44,7 +58,20 @@ fun HomeScreen(navController: NavController) {
     ) {
 
         item {
-            TopBar()
+            TopBar(
+                onLogout = {
+
+                    authRepository.logout()
+
+                    sessionManager.clearSession()
+
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.HOME) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
 
         item {
