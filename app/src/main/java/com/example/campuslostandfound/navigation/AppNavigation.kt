@@ -19,6 +19,7 @@ import com.example.campuslostandfound.screens.founditems.FoundItemsScreen
 import com.example.campuslostandfound.screens.itemdetails.ItemDetailsScreen
 import com.example.campuslostandfound.screens.profile.ProfileScreen
 import com.example.campuslostandfound.screens.myreports.MyReportsScreen
+import com.example.campuslostandfound.screens.editreport.EditReportScreen
 @Composable
 fun AppNavigation() {
 
@@ -70,7 +71,23 @@ fun AppNavigation() {
                 ProfileScreen(navController)
             }
             composable(Routes.MY_REPORTS) {
-                MyReportsScreen()
+                MyReportsScreen(navController)
+            }
+            composable(
+                route = "${Routes.EDIT_REPORT}/{itemId}"
+            ) { backStackEntry ->
+
+                val itemId = backStackEntry.arguments
+                    ?.getString("itemId")
+                    ?.toIntOrNull()
+
+                if (itemId != null) {
+
+                    EditReportScreen(
+                        itemId = itemId,
+                        navController = navController
+                    )
+                }
             }
         }
     }
