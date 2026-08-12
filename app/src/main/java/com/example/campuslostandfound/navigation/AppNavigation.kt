@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.padding
 import com.example.campuslostandfound.screens.founditems.FoundItemsScreen
 import com.example.campuslostandfound.screens.itemdetails.ItemDetailsScreen
 import com.example.campuslostandfound.screens.profile.ProfileScreen
-
+import com.example.campuslostandfound.screens.myreports.MyReportsScreen
 @Composable
 fun AppNavigation() {
 
@@ -68,6 +68,9 @@ fun AppNavigation() {
             }
             composable(Routes.PROFILE) {
                 ProfileScreen(navController)
+            }
+            composable(Routes.MY_REPORTS) {
+                MyReportsScreen()
             }
         }
     }
