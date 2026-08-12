@@ -4,11 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.campuslostandfound.data.repository.UserRepository
 import com.example.campuslostandfound.firebase.AuthRepository
-
+import com.example.campuslostandfound.data.session.SessionManager
 class LoginViewModelFactory(
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository
-) : ViewModelProvider.Factory {
+    private val userRepository: UserRepository,
+    private val sessionManager: SessionManager
+): ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(
@@ -19,7 +20,8 @@ class LoginViewModelFactory(
 
             return LoginViewModel(
                 authRepository,
-                userRepository
+                userRepository,
+                sessionManager
             ) as T
         }
 
